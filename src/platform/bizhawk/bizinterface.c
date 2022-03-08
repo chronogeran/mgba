@@ -16,6 +16,8 @@
 #include "mgba-util/vfs.h"
 
 const char* const binaryName = "mgba";
+const char* const projectName = "mGBA BizHawk";
+const char* const projectVersion = "(unknown)";
 
 #ifdef _WIN32
 #define EXP __declspec(dllexport)

@@ -42,13 +42,10 @@ SRCS = \
 	$(ROOT_DIR)/gba/cheats.c \
 	$(ROOT_DIR)/gba/core.c \
 	$(ROOT_DIR)/gba/dma.c \
-	$(ROOT_DIR)/gba/ereader.c \
 	$(ROOT_DIR)/gba/gba.c \
-	$(ROOT_DIR)/gba/hardware.c \
 	$(ROOT_DIR)/gba/hle-bios.c \
 	$(ROOT_DIR)/gba/input.c \
 	$(ROOT_DIR)/gba/io.c \
-	$(ROOT_DIR)/gba/matrix.c \
 	$(ROOT_DIR)/gba/memory.c \
 	$(ROOT_DIR)/gba/overrides.c \
 	$(ROOT_DIR)/gba/savedata.c \
@@ -56,8 +53,11 @@ SRCS = \
 	$(ROOT_DIR)/gba/sharkport.c \
 	$(ROOT_DIR)/gba/sio.c \
 	$(ROOT_DIR)/gba/timer.c \
-	$(ROOT_DIR)/gba/vfame.c \
 	$(ROOT_DIR)/gba/video.c \
+	$(ROOT_DIR)/gba/cart/ereader.c \
+	$(ROOT_DIR)/gba/cart/gpio.c \
+	$(ROOT_DIR)/gba/cart/matrix.c \
+	$(ROOT_DIR)/gba/cart/vfame.c \
 	$(ROOT_DIR)/gba/cheats/codebreaker.c \
 	$(ROOT_DIR)/gba/cheats/gameshark.c \
 	$(ROOT_DIR)/gba/cheats/parv3.c \
@@ -68,6 +68,7 @@ SRCS = \
 	$(ROOT_DIR)/gba/renderers/software-mode0.c \
 	$(ROOT_DIR)/gba/renderers/software-obj.c \
 	$(ROOT_DIR)/gba/renderers/video-software.c \
+	$(ROOT_DIR)/gba/sio/gbp.c \
 	$(ROOT_DIR)/gba/sio/joybus.c \
 	$(ROOT_DIR)/gba/sio/lockstep.c \
 	$(ROOT_DIR)/debugger/debugger.c \
