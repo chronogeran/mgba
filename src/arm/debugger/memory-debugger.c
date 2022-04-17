@@ -46,15 +46,16 @@ static bool _checkWatchpoints(struct ARMDebugger* debugger, uint32_t address, st
 		return debugger->originalMemory.NAME(cpu, __VA_ARGS__); \
 	}
 
-#define CREATE_WATCHPOINT_WRITE_SHIM(NAME, WIDTH, RETURN, TYPES, ...) \
-	static RETURN DebuggerShim_ ## NAME TYPES { \
+#define CREATE_WATCHPOINT_WRITE_SHIM(NAME, WIDTH, TYPES, ...) \
+	static void DebuggerShim_ ## NAME TYPES { \
 		struct ARMDebugger* debugger; \
 		FIND_DEBUGGER(debugger, cpu); \
 		struct mDebuggerEntryInfo info; \
-		if (_checkWatchpoints(debugger, address, &info, WATCHPOINT_WRITE, value, WIDTH)) { \
+		bool enter = _checkWatchpoints(debugger, address, &info, WATCHPOINT_WRITE, value, WIDTH); \
+		debugger->originalMemory.NAME(cpu, __VA_ARGS__); \
+		if (enter) { \
 			mDebuggerEnter(debugger->d.p, DEBUGGER_ENTER_WATCHPOINT, &info); \
 		} \
-		return debugger->originalMemory.NAME(cpu, __VA_ARGS__); \
 	}
 
 #define CREATE_MULTIPLE_WATCHPOINT_SHIM(NAME, ACCESS_TYPE) \
@@ -84,9 +85,9 @@ static bool _checkWatchpoints(struct ARMDebugger* debugger, uint32_t address, st
 CREATE_WATCHPOINT_READ_SHIM(load32, 4, uint32_t, (struct ARMCore* cpu, uint32_t address, int* cycleCounter), address, cycleCounter)
 CREATE_WATCHPOINT_READ_SHIM(load16, 2, uint32_t, (struct ARMCore* cpu, uint32_t address, int* cycleCounter), address, cycleCounter)
 CREATE_WATCHPOINT_READ_SHIM(load8, 1, uint32_t, (struct ARMCore* cpu, uint32_t address, int* cycleCounter), address, cycleCounter)
-CREATE_WATCHPOINT_WRITE_SHIM(store32, 4, void, (struct ARMCore* cpu, uint32_t address, int32_t value, int* cycleCounter), address, value, cycleCounter)
-CREATE_WATCHPOINT_WRITE_SHIM(store16, 2, void, (struct ARMCore* cpu, uint32_t address, int16_t value, int* cycleCounter), address, value, cycleCounter)
-CREATE_WATCHPOINT_WRITE_SHIM(store8, 1, void, (struct ARMCore* cpu, uint32_t address, int8_t value, int* cycleCounter), address, value, cycleCounter)
+CREATE_WATCHPOINT_WRITE_SHIM(store32, 4, (struct ARMCore* cpu, uint32_t address, int32_t value, int* cycleCounter), address, value, cycleCounter)
+CREATE_WATCHPOINT_WRITE_SHIM(store16, 2, (struct ARMCore* cpu, uint32_t address, int16_t value, int* cycleCounter), address, value, cycleCounter)
+CREATE_WATCHPOINT_WRITE_SHIM(store8, 1, (struct ARMCore* cpu, uint32_t address, int8_t value, int* cycleCounter), address, value, cycleCounter)
 CREATE_MULTIPLE_WATCHPOINT_SHIM(loadMultiple, WATCHPOINT_READ)
 CREATE_MULTIPLE_WATCHPOINT_SHIM(storeMultiple, WATCHPOINT_WRITE)
 CREATE_SHIM(setActiveRegion, void, (struct ARMCore* cpu, uint32_t address), address)
